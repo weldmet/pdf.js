@@ -140,15 +140,15 @@ class DefaultExternalServices {
     throw new Error("Cannot initialize DefaultExternalServices.");
   }
 
-  static updateFindControlState(data) {}
+  static updateFindControlState(data) { }
 
-  static updateFindMatchesCount(data) {}
+  static updateFindMatchesCount(data) { }
 
-  static initPassiveLoading(callbacks) {}
+  static initPassiveLoading(callbacks) { }
 
-  static fallback(data, callback) {}
+  static fallback(data, callback) { }
 
-  static reportTelemetry(data) {}
+  static reportTelemetry(data) { }
 
   static createDownloadManager(options) {
     throw new Error("Not implemented: createDownloadManager");
@@ -1464,9 +1464,9 @@ const PDFViewerApplication = {
     // Provides some basic debug information
     console.log(
       `PDF ${pdfDocument.fingerprint} [${info.PDFFormatVersion} ` +
-        `${(info.Producer || "-").trim()} / ${(info.Creator || "-").trim()}] ` +
-        `(PDF.js: ${version || "-"}` +
-        `${this.pdfViewer.enableWebGL ? " [WebGL]" : ""})`
+      `${(info.Producer || "-").trim()} / ${(info.Creator || "-").trim()}] ` +
+      `(PDF.js: ${version || "-"}` +
+      `${this.pdfViewer.enableWebGL ? " [WebGL]" : ""})`
     );
 
     let pdfTitle;
@@ -1994,21 +1994,8 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
       return;
     }
     try {
-      const viewerOrigin = new URL(window.location.href).origin || "null";
-      if (HOSTED_VIEWER_ORIGINS.includes(viewerOrigin)) {
-        // Hosted or local viewer, allow for any file locations
-        return;
-      }
-      const { origin, protocol } = new URL(file, window.location.href);
-      // Removing of the following line will not guarantee that the viewer will
-      // start accepting URLs from foreign origin -- CORS headers on the remote
-      // server must be properly configured.
-      // IE10 / IE11 does not include an origin in `blob:`-URLs. So don't block
-      // any blob:-URL. The browser's same-origin policy will block requests to
-      // blob:-URLs from other origins, so this is safe.
-      if (origin !== viewerOrigin && protocol !== "blob:") {
-        throw new Error("file origin does not match viewer's");
-      }
+      console.log(file)
+      return
     } catch (ex) {
       const message = ex && ex.message;
       PDFViewerApplication.l10n
@@ -2117,10 +2104,11 @@ function webViewerInitialized() {
         fileInput: evt.dataTransfer,
       });
     });
-  } else {
-    appConfig.toolbar.openFile.setAttribute("hidden", "true");
-    appConfig.secondaryToolbar.openFileButton.setAttribute("hidden", "true");
   }
+
+  appConfig.toolbar.openFile.setAttribute("hidden", "true");
+  appConfig.toolbar.download.setAttribute("hidden", "true");
+  appConfig.secondaryToolbar.openFileButton.setAttribute("hidden", "true");
 
   if (!PDFViewerApplication.supportsDocumentFonts) {
     AppOptions.set("disableFontFace", true);
@@ -2135,10 +2123,8 @@ function webViewerInitialized() {
       });
   }
 
-  if (!PDFViewerApplication.supportsPrinting) {
-    appConfig.toolbar.print.classList.add("hidden");
-    appConfig.secondaryToolbar.printButton.classList.add("hidden");
-  }
+  appConfig.toolbar.print.classList.add("hidden");
+  appConfig.secondaryToolbar.printButton.classList.add("hidden");
 
   if (!PDFViewerApplication.supportsFullscreen) {
     appConfig.toolbar.presentationModeButton.classList.add("hidden");
@@ -2327,7 +2313,7 @@ function webViewerSidebarViewChanged(evt) {
   const store = PDFViewerApplication.store;
   if (store && PDFViewerApplication.isInitialViewSet) {
     // Only update the storage when the document has been loaded *and* rendered.
-    store.set("sidebarView", evt.view).catch(function () {});
+    store.set("sidebarView", evt.view).catch(function () { });
   }
 }
 
@@ -2367,7 +2353,7 @@ function webViewerScrollModeChanged(evt) {
   const store = PDFViewerApplication.store;
   if (store && PDFViewerApplication.isInitialViewSet) {
     // Only update the storage when the document has been loaded *and* rendered.
-    store.set("scrollMode", evt.mode).catch(function () {});
+    store.set("scrollMode", evt.mode).catch(function () { });
   }
 }
 
@@ -2375,7 +2361,7 @@ function webViewerSpreadModeChanged(evt) {
   const store = PDFViewerApplication.store;
   if (store && PDFViewerApplication.isInitialViewSet) {
     // Only update the storage when the document has been loaded *and* rendered.
-    store.set("spreadMode", evt.mode).catch(function () {});
+    store.set("spreadMode", evt.mode).catch(function () { });
   }
 }
 
@@ -2444,6 +2430,7 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
       "true"
     );
     appConfig.toolbar.download.setAttribute("hidden", "true");
+    appConfig.secondaryToolbar.printButton.setAttribute("hidden", "true");
     appConfig.secondaryToolbar.downloadButton.setAttribute("hidden", "true");
   };
 
