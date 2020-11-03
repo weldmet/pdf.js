@@ -2047,7 +2047,8 @@ function webViewerInitialized() {
   if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
     const queryString = document.location.search.substring(1);
     const params = parseQueryString(queryString);
-    file = "file" in params ? "https://weldmet-attachments.s3.eu-west-2.amazonaws.com/" + params.file : "";
+    const baseUrl = (typeof PDFJSDev === "undefined" || !PDFJSDev.test("PRODUCTION")) ? "https://weldmet-attachments-test.s3.eu-west-2.amazonaws.com/" : "https://weldmet-attachments.s3.eu-west-2.amazonaws.com/"
+    file = "file" in params ? baseUrl + params.file : "";
     validateFileURL(file);
   } else if (PDFJSDev.test("MOZCENTRAL")) {
     file = window.location.href;
