@@ -281,6 +281,16 @@ html[dir="rtl"] #outerContainer.sidebarOpen #sidebarContainer {
   min-width: 320px;
 }
 
+.pocket-hidden {
+  display: none;
+}
+
+@media all and (min-width: 600px) {
+  .pocket-hidden {
+    display: block;
+  }
+}
+
 #sidebarContent {
   top: 32px;
   bottom: 0;
